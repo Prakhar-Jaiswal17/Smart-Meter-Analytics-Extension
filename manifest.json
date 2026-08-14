@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "Smart Meter Analytics",
+  "version": "1.0.0",
+  "description": "Detailed electricity consumption analytics for the CORE smart-meter portal (core.polarisgrids.com).",
+  "permissions": [
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://core.polarisgrids.com/*"
+  ],
+  "background": {
+    "service_worker": "src/background/service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://core.polarisgrids.com/*"],
+      "js": ["src/content/bridge.js"],
+      "run_at": "document_idle",
+      "world": "MAIN"
+    },
+    {
+      "matches": ["https://core.polarisgrids.com/*"],
+      "js": ["src/content/content.js"],
+      "run_at": "document_idle",
+      "world": "ISOLATED"
+    }
+  ],
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_title": "Smart Meter Analytics"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["src/dashboard/dashboard.html"],
+      "matches": ["https://core.polarisgrids.com/*"]
+    }
+  ]
+}

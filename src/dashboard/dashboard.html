@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Meter Analytics — CORE Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header id="header">
+      <div class="header-left">
+        <div class="logo">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="currentColor" class="logo-bolt"/>
+          </svg>
+          <h1>Smart Meter <span class="accent">Analytics</span></h1>
+        </div>
+        <div id="meter-badge" class="meter-badge hidden">
+          <span id="meter-name" class="meter-name"></span>
+          <span id="live-dot" class="live-dot"></span>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="date-picker-wrap">
+          <label for="month-picker">Month</label>
+          <input type="month" id="month-picker" class="month-picker">
+        </div>
+        <button id="refresh-btn" class="btn btn-refresh" title="Refresh Data">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+          <span>Refresh</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Loading state -->
+    <div id="loading-state" class="state-container">
+      <div class="loader-spinner"></div>
+      <p>Loading your electricity analytics...</p>
+    </div>
+
+    <!-- Error state -->
+    <div id="error-state" class="state-container hidden">
+      <div class="error-icon">⚠️</div>
+      <p id="error-message">Unable to load data.</p>
+      <button id="error-retry-btn" class="btn btn-primary">Retry</button>
+    </div>
+
+    <!-- Not authenticated state -->
+    <div id="auth-state" class="state-container hidden">
+      <div class="auth-icon">🔒</div>
+      <h2>Not Connected</h2>
+      <p>Please open the <a href="https://core.polarisgrids.com" target="_blank" rel="noopener">CORE smart-meter portal</a> and log in to your account.</p>
+      <p class="muted">The extension will automatically detect your session.</p>
+    </div>
+
+    <!-- Main content -->
+    <main id="main-content" class="hidden">
+      <!-- Summary cards -->
+      <section class="cards-grid" id="summary-cards">
+        <div class="card card-primary" id="card-today">
+          <div class="card-header">
+            <span class="card-label">Today's Consumption</span>
+            <span class="card-icon">⚡</span>
+          </div>
+          <div class="card-value" id="today-kwh">—</div>
+          <div class="card-sub" id="today-cost">—</div>
+        </div>
+
+        <div class="card" id="card-wallet">
+          <div class="card-header">
+            <span class="card-label">Wallet Balance</span>
+            <span class="card-icon">💰</span>
+          </div>
+          <div class="card-value" id="wallet-balance">—</div>
+          <div class="card-sub" id="wallet-estimate">—</div>
+        </div>
+
+        <div class="card" id="card-avg">
+          <div class="card-header">
+            <span class="card-label">Avg Daily Consumption</span>
+            <span class="card-icon">📊</span>
+          </div>
+          <div class="card-value" id="avg-daily-kwh">—</div>
+          <div class="card-sub" id="avg-daily-cost">—</div>
+        </div>
+
+        <div class="card" id="card-power">
+          <div class="card-header">
+            <span class="card-label">Latest Observed Power</span>
+            <span class="card-icon">🔌</span>
+          </div>
+          <div class="card-value" id="latest-power">—</div>
+          <div class="card-sub" id="latest-power-time">—</div>
+        </div>
+
+        <div class="card" id="card-peak">
+          <div class="card-header">
+            <span class="card-label">Peak Observed Power</span>
+            <span class="card-icon">📈</span>
+          </div>
+          <div class="card-value" id="peak-power">—</div>
+          <div class="card-sub" id="peak-power-time">—</div>
+        </div>
+
+        <div class="card" id="card-tariff">
+          <div class="card-header">
+            <span class="card-label">Electricity Tariff</span>
+            <span class="card-icon">💡</span>
+          </div>
+          <div class="card-value" id="tariff-value">—</div>
+          <div class="card-sub">per kWh</div>
+        </div>
+      </section>
+
+      <!-- Insights -->
+      <section id="insights-section" class="section hidden">
+        <h2 class="section-title">Insights</h2>
+        <div id="insights-list" class="insights-list"></div>
+      </section>
+
+      <!-- Charts -->
+      <section class="section">
+        <h2 class="section-title">Consumption Overview</h2>
+        <div class="charts-grid">
+          <div class="chart-card">
+            <h3>Daily Consumption (kWh)</h3>
+            <canvas id="chart-daily-kwh"></canvas>
+          </div>
+          <div class="chart-card">
+            <h3>Daily Cost (₹)</h3>
+            <canvas id="chart-daily-cost"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="power-section">
+        <h2 class="section-title">Power Monitoring</h2>
+        <div class="charts-grid">
+          <div class="chart-card chart-card-wide">
+            <h3>Today's Power Profile (Watts)</h3>
+            <p class="chart-note">Instantaneous power measurements — not energy consumed</p>
+            <canvas id="chart-power"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Period Stats -->
+      <section class="section">
+        <h2 class="section-title">Period Summary</h2>
+        <div class="stats-tabs">
+          <button class="tab-btn active" data-period="week">Last 7 Days</button>
+          <button class="tab-btn" data-period="month">This Month</button>
+        </div>
+        <div class="stats-grid" id="period-stats">
+          <div class="stat-item">
+            <span class="stat-label">Total Consumption</span>
+            <span class="stat-value" id="stat-total-kwh">—</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Total Cost</span>
+            <span class="stat-value" id="stat-total-cost">—</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Daily Average</span>
+            <span class="stat-value" id="stat-avg-kwh">—</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Daily Avg Cost</span>
+            <span class="stat-value" id="stat-avg-cost">—</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Highest Day</span>
+            <span class="stat-value" id="stat-peak-day">—</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Lowest Day</span>
+            <span class="stat-value" id="stat-low-day">—</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Daily Consumption Table -->
+      <section class="section">
+        <h2 class="section-title">Daily Consumption History</h2>
+        <div class="table-wrap">
+          <table id="daily-table" class="data-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Opening (kWh)</th>
+                <th>Closing (kWh)</th>
+                <th>Consumed (kWh)</th>
+                <th>Cost (₹)</th>
+                <th>Balance (₹)</th>
+              </tr>
+            </thead>
+            <tbody id="daily-table-body">
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Meter Info -->
+      <section class="section" id="meter-info-section">
+        <h2 class="section-title">Meter Information</h2>
+        <div class="meter-info-grid" id="meter-info-grid"></div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <p>Smart Meter Analytics Extension • Data from <a href="https://core.polarisgrids.com" target="_blank" rel="noopener">CORE by Polaris Grids</a></p>
+        <p class="muted">Costs shown are from the portal's records. Estimated values are clearly labeled.</p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="../../lib/chart.min.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>
