@@ -5,57 +5,56 @@
    ============================================================ */
 
 :root {
-  /* Color tokens — Light theme */
-  --bg-primary: #f0f2f5;
-  --bg-secondary: #ffffff;
+  --bg-primary: #edf1f5;
+  --bg-secondary: #f8fafc;
   --bg-card: #ffffff;
-  --bg-card-hover: #f8f9fb;
-  --bg-glass: rgba(255, 255, 255, 0.7);
-  --text-primary: #1a1d23;
-  --text-secondary: #5a6171;
-  --text-muted: #8e95a5;
-  --border: #e2e5ec;
-  --border-subtle: #eef0f4;
-  --accent: #3cceb1;
-  --accent-glow: rgba(60, 206, 177, 0.15);
-  --primary: #0b3690;
-  --primary-glow: rgba(11, 54, 144, 0.1);
-  --danger: #ef4444;
+  --bg-card-hover: #f5f8fd;
+  --bg-glass: rgba(255, 255, 255, 0.82);
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #7a8699;
+  --border: #e5e7eb;
+  --border-subtle: #edf2f7;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --primary: #1d4ed8;
+  --primary-soft: rgba(29, 78, 216, 0.08);
+  --danger: #dc2626;
   --warning: #f59e0b;
   --success: #22c55e;
-  --chart-bar: #3cceb1;
-  --chart-bar-hover: #2fb89d;
-  --chart-line: #0b3690;
+  --chart-bar: #18a0a6;
+  --chart-bar-hover: #0f8d93;
+  --chart-line: #2563eb;
   --chart-power: #f59e0b;
-  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-  --card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --radius: 12px;
-  --radius-sm: 8px;
+  --card-shadow: 0 10px 20px rgba(15, 23, 42, 0.06);
+  --card-shadow-hover: 0 14px 28px rgba(15, 23, 42, 0.1);
+  --radius: 16px;
+  --radius-sm: 10px;
   --transition: 0.2s ease;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-primary: #0d1117;
-    --bg-secondary: #161b22;
-    --bg-card: #1c2333;
-    --bg-card-hover: #232b3e;
-    --bg-glass: rgba(28, 35, 51, 0.8);
-    --text-primary: #e6edf3;
-    --text-secondary: #9aa5b4;
-    --text-muted: #6b7585;
-    --border: #2d3548;
-    --border-subtle: #252d3f;
-    --accent: #3cceb1;
-    --accent-glow: rgba(60, 206, 177, 0.12);
-    --primary: #5b8af5;
-    --primary-glow: rgba(91, 138, 245, 0.12);
-    --chart-bar: #3cceb1;
-    --chart-bar-hover: #4de0c5;
-    --chart-line: #5b8af5;
+    --bg-primary: #08131f;
+    --bg-secondary: #0d1b2a;
+    --bg-card: #111f2d;
+    --bg-card-hover: #142738;
+    --bg-glass: rgba(13, 27, 42, 0.8);
+    --text-primary: #e5edf5;
+    --text-secondary: #a4b4c9;
+    --text-muted: #6f8398;
+    --border: #1f2e3d;
+    --border-subtle: #1a2a3a;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --primary: #93c5fd;
+    --primary-soft: rgba(147, 197, 253, 0.08);
+    --chart-bar: #3dd9c8;
+    --chart-bar-hover: #5be4d3;
+    --chart-line: #7ab7ff;
     --chart-power: #fbbf24;
-    --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
-    --card-shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.35);
+    --card-shadow: 0 10px 24px rgba(2, 6, 23, 0.45);
+    --card-shadow-hover: 0 16px 32px rgba(2, 6, 23, 0.52);
   }
 }
 
@@ -300,7 +299,7 @@ a:hover {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
-  padding: 20px;
+  padding: 20px 18px;
   box-shadow: var(--card-shadow);
   transition: all var(--transition);
 }
@@ -311,8 +310,34 @@ a:hover {
 }
 
 .card-primary {
-  border-left: 3px solid var(--accent);
+  border-color: rgba(15, 118, 110, 0.2);
+  background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-card-hover) 100%);
 }
+
+.card-mark {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: block;
+  position: relative;
+  background: var(--accent);
+  box-shadow: 0 0 0 6px var(--accent-soft);
+}
+
+.card-mark::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.card-mark-wallet { background: var(--primary); box-shadow: 0 0 0 6px var(--primary-soft); }
+.card-mark-chart { background: var(--chart-bar); box-shadow: 0 0 0 6px rgba(24, 160, 166, 0.12); }
+.card-mark-power { background: var(--chart-power); box-shadow: 0 0 0 6px rgba(245, 158, 11, 0.12); }
+.card-mark-peak { background: var(--chart-line); box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.12); }
+.card-mark-tariff { background: var(--accent); box-shadow: 0 0 0 6px var(--accent-soft); }
+.card-mark-energy { background: var(--accent); box-shadow: 0 0 0 6px var(--accent-soft); }
 
 .card-header {
   display: flex;
@@ -400,7 +425,12 @@ a:hover {
 
 .insight-icon {
   flex-shrink: 0;
-  margin-top: 2px;
+  width: 8px;
+  height: 8px;
+  margin-top: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 5px var(--accent-soft);
 }
 
 /* ============================================================

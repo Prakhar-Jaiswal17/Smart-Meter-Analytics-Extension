@@ -1,0 +1,40 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Packaged extension files
+*.crx
+*.zip
+
+# Extension keys (highly sensitive, do not share)
+*.pem
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Mac OS artifacts
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Build output
+dist/
+build/
+out/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo

@@ -49,14 +49,14 @@
 
     <!-- Error state -->
     <div id="error-state" class="state-container hidden">
-      <div class="error-icon">⚠️</div>
+      <div class="error-icon" aria-hidden="true"></div>
       <p id="error-message">Unable to load data.</p>
       <button id="error-retry-btn" class="btn btn-primary">Retry</button>
     </div>
 
     <!-- Not authenticated state -->
     <div id="auth-state" class="state-container hidden">
-      <div class="auth-icon">🔒</div>
+      <div class="auth-icon" aria-hidden="true"></div>
       <h2>Not Connected</h2>
       <p>Please open the <a href="https://core.polarisgrids.com" target="_blank" rel="noopener">CORE smart-meter portal</a> and log in to your account.</p>
       <p class="muted">The extension will automatically detect your session.</p>
@@ -69,7 +69,7 @@
         <div class="card card-primary" id="card-today">
           <div class="card-header">
             <span class="card-label">Today's Consumption</span>
-            <span class="card-icon">⚡</span>
+            <span class="card-mark card-mark-energy" aria-hidden="true"></span>
           </div>
           <div class="card-value" id="today-kwh">—</div>
           <div class="card-sub" id="today-cost">—</div>
@@ -78,7 +78,7 @@
         <div class="card" id="card-wallet">
           <div class="card-header">
             <span class="card-label">Wallet Balance</span>
-            <span class="card-icon">💰</span>
+            <span class="card-mark card-mark-wallet" aria-hidden="true"></span>
           </div>
           <div class="card-value" id="wallet-balance">—</div>
           <div class="card-sub" id="wallet-estimate">—</div>
@@ -87,7 +87,7 @@
         <div class="card" id="card-avg">
           <div class="card-header">
             <span class="card-label">Avg Daily Consumption</span>
-            <span class="card-icon">📊</span>
+            <span class="card-mark card-mark-chart" aria-hidden="true"></span>
           </div>
           <div class="card-value" id="avg-daily-kwh">—</div>
           <div class="card-sub" id="avg-daily-cost">—</div>
@@ -96,7 +96,7 @@
         <div class="card" id="card-power">
           <div class="card-header">
             <span class="card-label">Latest Observed Power</span>
-            <span class="card-icon">🔌</span>
+            <span class="card-mark card-mark-power" aria-hidden="true"></span>
           </div>
           <div class="card-value" id="latest-power">—</div>
           <div class="card-sub" id="latest-power-time">—</div>
@@ -105,7 +105,7 @@
         <div class="card" id="card-peak">
           <div class="card-header">
             <span class="card-label">Peak Observed Power</span>
-            <span class="card-icon">📈</span>
+            <span class="card-mark card-mark-peak" aria-hidden="true"></span>
           </div>
           <div class="card-value" id="peak-power">—</div>
           <div class="card-sub" id="peak-power-time">—</div>
@@ -114,7 +114,7 @@
         <div class="card" id="card-tariff">
           <div class="card-header">
             <span class="card-label">Electricity Tariff</span>
-            <span class="card-icon">💡</span>
+            <span class="card-mark card-mark-tariff" aria-hidden="true"></span>
           </div>
           <div class="card-value" id="tariff-value">—</div>
           <div class="card-sub">per kWh</div>

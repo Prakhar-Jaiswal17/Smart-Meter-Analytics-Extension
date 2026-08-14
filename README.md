@@ -12,11 +12,11 @@ A Manifest V3 Chrome extension that enhances the CORE smart-meter portal (`core.
 
 ## Installation Instructions
 
-1. Clone or download this repository.
+1. Download and extract the `SmartMeterExtension.zip` file on your computer.
 2. Open Google Chrome and navigate to `chrome://extensions/`.
 3. Enable **Developer mode** using the toggle switch in the top right corner.
 4. Click on the **Load unpacked** button in the top left corner.
-5. Select the `SmartMeterExtension` directory.
+5. Select the folder you just extracted.
 6. The extension is now installed! You should see the Smart Meter Analytics icon in your browser toolbar.
 
 ## How to Use
@@ -33,6 +33,12 @@ This extension strictly separates responsibilities to maintain high security:
 - **Auth Bridge:** A minimal script extracts the session token from the portal's local storage and passes it to the Service Worker.
 - **Service Worker:** Acts as a secure proxy. It stores the token in ephemeral session storage (cleared on browser close), handles all CORE API requests, and passes normalized data to the UI.
 - **Dashboard / Popup:** Never handles or sees the authentication token. They only receive the final analytics data via Chrome messaging.
+
+## Changelog / Recent Updates
+
+- **Dashboard UI Fixes:** Fixed a data binding issue where the "Lowest Day" metric occasionally failed to display.
+- **Enhanced Tooltips:** Improved the charts' hover tooltips to display fully formatted dates (e.g., "9th August") for better readability.
+- **Hourly Power Graph:** Verified and polished the power profile chart that displays hourly / instant consumption patterns.
 
 ## Legal / Disclaimer
 

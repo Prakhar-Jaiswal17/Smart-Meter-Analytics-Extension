@@ -1,26 +1,26 @@
 /* popup.css */
 
 :root {
-  --bg-primary: #f0f2f5;
+  --bg-primary: #eef3f7;
   --bg-card: #ffffff;
-  --text-primary: #1a1d23;
-  --text-secondary: #5a6171;
-  --border: #e2e5ec;
-  --accent: #3cceb1;
-  --primary: #0b3690;
-  --primary-glow: rgba(11, 54, 144, 0.05);
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --border: #e5e7eb;
+  --accent: #0f766e;
+  --primary: #1d4ed8;
+  --primary-glow: rgba(29, 78, 216, 0.08);
   --success: #22c55e;
   --warning: #f59e0b;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-primary: #0d1117;
-    --bg-card: #1c2333;
-    --text-primary: #e6edf3;
-    --text-secondary: #9aa5b4;
-    --border: #2d3548;
-    --primary-glow: rgba(91, 138, 245, 0.1);
+    --bg-primary: #08131f;
+    --bg-card: #111f2d;
+    --text-primary: #e5edf5;
+    --text-secondary: #a4b4c9;
+    --border: #1f2e3d;
+    --primary-glow: rgba(147, 197, 253, 0.08);
   }
 }
 
@@ -123,7 +123,28 @@ body {
 }
 
 .icon {
-  font-size: 2rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--primary-glow);
+  position: relative;
+}
+
+.icon::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.icon-warning::before {
+  background: var(--warning);
+}
+
+.icon-lock::before {
+  inset: 7px 9px 8px 9px;
+  border-radius: 5px;
 }
 
 .link {
@@ -152,14 +173,16 @@ body {
 .data-box {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px;
+  border-radius: 10px;
+  padding: 12px 12px 10px;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.04);
 }
 
 .primary-box {
-  border-bottom: 3px solid var(--accent);
+  background: linear-gradient(180deg, var(--bg-card), rgba(15, 118, 110, 0.03));
+  border-color: rgba(15, 118, 110, 0.2);
 }
 
 .box-label {

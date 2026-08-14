@@ -247,7 +247,7 @@ function updateInsights() {
   els.insightsSection.classList.remove('hidden');
   els.insightsList.innerHTML = insights.map(text => `
     <div class="insight-item">
-      <span class="insight-icon">💡</span>
+      <span class="insight-icon" aria-hidden="true"></span>
       <span>${text}</span>
     </div>
   `).join('');
@@ -277,8 +277,8 @@ function updatePeriodStats() {
     els.statPeakDay.textContent = '—';
   }
   
-  if (stats.lowDay) {
-    els.statLowDay.innerHTML = `${formatDateShort(stats.lowDay.date)}<br><small class="muted">${stats.lowDay.kwh.toFixed(2)} kWh</small>`;
+  if (stats.lowestDay) {
+    els.statLowDay.innerHTML = `${formatDateShort(stats.lowestDay.date)}<br><small class="muted">${stats.lowestDay.kwh.toFixed(2)} kWh</small>`;
   } else {
     els.statLowDay.textContent = '—';
   }
@@ -361,6 +361,13 @@ function updateCharts() {
   Chart.defaults.color = textColor;
   Chart.defaults.font.family = "'Montserrat', sans-serif";
 
+  // Extract last 30 days of data and reverse for chronological order
+  const chartData = [...(dailyRecords || [])].slice(0, 30).reverse();
+  const labels = chartData.map(r => {
+    const d = new Date(r.date + 'T00:00:00');
+    return d.getDate(); // Just show day number on X axis
+  });
+
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -382,6 +389,17 @@ function updateCharts() {
         bodyFont: { size: 12 },
         displayColors: false,
         callbacks: {
+          title: function(tooltipItems) {
+            const idx = tooltipItems[0].dataIndex;
+            if (chartData[idx]) {
+              const d = new Date(chartData[idx].date + 'T00:00:00');
+              const day = d.getDate();
+              const suffix = ["th", "st", "nd", "rd"][((day % 100) - 20) % 10] || ["th", "st", "nd", "rd"][day] || "th";
+              const month = d.toLocaleString('en-IN', { month: 'long' });
+              return `${day}${suffix} ${month}`;
+            }
+            return tooltipItems[0].label;
+          },
           label: function(context) {
             let label = context.dataset.label || '';
             if (label) {
@@ -411,13 +429,6 @@ function updateCharts() {
       }
     }
   };
-
-  // Extract last 30 days of data and reverse for chronological order
-  const chartData = [...(dailyRecords || [])].slice(0, 30).reverse();
-  const labels = chartData.map(r => {
-    const d = new Date(r.date + 'T00:00:00');
-    return d.getDate(); // Just show day number on X axis
-  });
 
   // 1. Daily kWh Chart
   const kwhCtx = document.getElementById('chart-daily-kwh');
@@ -540,26 +551,26 @@ function updateCharts() {
                 const lines = [];
                 
                 // Line 1: Power
-                lines.push(`⚡ Power: ${watts.toFixed(2)} W`);
+                lines.push(`Power: ${watts.toFixed(2)} W`);
                 
                 // Line 2: Instantaneous energy rate (kW)
-                lines.push(`📊 Rate: ${(watts / 1000).toFixed(4)} kW`);
+                lines.push(`Rate: ${(watts / 1000).toFixed(4)} kW`);
                 
                 // Line 3: Cumulative energy up to this point
                 if (cumulativeKwh[idx] !== undefined) {
-                  lines.push(`🔋 Energy (till now): ${cumulativeKwh[idx].toFixed(4)} kWh`);
+                  lines.push(`Energy (till now): ${cumulativeKwh[idx].toFixed(4)} kWh`);
                 }
                 
                 // Line 4: Cumulative cost up to this point
                 if (tariffRate > 0 && cumulativeCost[idx] !== undefined) {
-                  lines.push(`💰 Cost (till now): ₹${cumulativeCost[idx].toFixed(2)}`);
+                  lines.push(`Cost (till now): ₹${cumulativeCost[idx].toFixed(2)}`);
                 }
 
                 // Line 5: Interval energy (between previous and this sample)
                 if (idx > 0) {
                   const intervalKwh = cumulativeKwh[idx] - cumulativeKwh[idx - 1];
                   const intervalCost = tariffRate > 0 ? (intervalKwh * tariffRate) : 0;
-                  lines.push(`📍 This interval: ${(intervalKwh * 1000).toFixed(2)} Wh (₹${intervalCost.toFixed(4)})`);
+                  lines.push(`This interval: ${(intervalKwh * 1000).toFixed(2)} Wh (₹${intervalCost.toFixed(4)})`);
                 }
                 
                 return lines;
